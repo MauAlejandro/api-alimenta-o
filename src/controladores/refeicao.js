@@ -1,41 +1,40 @@
 const pool = require("../conexao");
 
-
 const infoNutricionalRefeicao = async (req, res) => {
-    const { id } = req.params;
-  
-    try {
-      const exibirInfoNutricional = await pool.query(
-        `select * from refeicoes 
-          where id = $1`,
-        [id]
-      );
-  
-      const {
-        nome_refeicao,
-        calorias,
-        proteinas,
-        carboidratos,
-        gorduras,
-        gorduras_saturadas,
-      } = exibirInfoNutricional.rows[0];
-  
-      return res.json({
-        nome_refeicao,
-        calorias,
-        proteinas,
-        carboidratos,
-        gorduras,
-        gorduras_saturadas,
-      });
-    } catch (error) {
-      return res.status(500).json({ message: error });
-    }
-  };
+  const { id } = req.params;
 
-  
+  try {
+    const exibirInfoNutricional = await pool.query(
+      `select * from refeicoes 
+          where id = $1`,
+      [id]
+    );
+
+    const {
+      nome_refeicao,
+      calorias,
+      proteinas,
+      carboidratos,
+      gorduras,
+      gorduras_saturadas,
+    } = exibirInfoNutricional.rows[0];
+
+    return res.json({
+      nome_refeicao,
+      calorias,
+      proteinas,
+      carboidratos,
+      gorduras,
+      gorduras_saturadas,
+    });
+  } catch (error) {
+    return res.status(500).json({ message: error });
+  }
+};
+
 const cadastrarRefeicao = async (req, res) => {
   const { nome_refeicao, ingredientes } = req.body;
+  const { id } = req.usuario.rows[0];
 
   try {
     const valoresNutricionais = {
@@ -76,8 +75,8 @@ const cadastrarRefeicao = async (req, res) => {
     const cadastrarRefeicao = await pool.query(
       `
     insert into refeicoes 
-    (nome_refeicao, calorias, proteinas, carboidratos, gorduras, gorduras_saturadas)
-    values ($1, $2, $3, $4, $5, $6) returning id`,
+    (nome_refeicao, calorias, proteinas, carboidratos, gorduras, gorduras_saturadas, usuario_id)
+    values ($1, $2, $3, $4, $5, $6, $7) returning id`,
       [
         nome_refeicao,
         valoresNutricionais.calorias,
@@ -85,6 +84,7 @@ const cadastrarRefeicao = async (req, res) => {
         valoresNutricionais.carboidratos,
         valoresNutricionais.gorduras,
         valoresNutricionais.gorduras_saturadas,
+        id,
       ]
     );
 
