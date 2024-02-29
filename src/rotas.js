@@ -3,6 +3,8 @@ const express = require("express");
 const {
   exibirAlimentos,
   cadastrarAlimento,
+  pesquisarAlimento,
+  atualizarAlimento,
 } = require("./controladores/alimentos");
 
 const {
@@ -18,13 +20,15 @@ const verificarToken = require("./intermediarios/verificarToken");
 
 const rotas = express();
 
-rotas.post("/usuario", emailExistente, cadastrarUsuario)
-rotas.get("/login", fazerLogin)
+rotas.post("/usuario", emailExistente, cadastrarUsuario);
+rotas.get("/login", fazerLogin);
 
-rotas.use(verificarToken)
+rotas.use(verificarToken);
 
 rotas.get("/alimentos", exibirAlimentos);
 rotas.post("/alimentos", cadastrarAlimento);
+rotas.put("/alimentos", atualizarAlimento);
+rotas.get("/alimentos/:nome", pesquisarAlimento);
 
 rotas.get("/refeicao/:id", infoNutricionalRefeicao);
 rotas.post("/refeicao", ingredienteCadastrado, cadastrarRefeicao);
