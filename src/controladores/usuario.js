@@ -27,37 +27,39 @@ const cadastrarUsuario = async (req, res) => {
 };
 
 const fazerLogin = async (req, res) => {
-  const { senha, email } = req.body;
-
+  const { email, senha } = req.body;
   try {
-    const usuarioValido = await pool.query(
+    const usuarioExistente = await pool.query(
       "select * from usuarios where email = $1",
       [email]
     );
 
-    if (usuarioValido.rowCount < 1) {
-      return res.status(404).json({ message: "usuario ou senha invalidos" });
+    if (usuarioExistente.rowCount < 1) {
+      return res.status(400).json({ menssagem: "senha ou email invalidos" });
     }
 
-    const senhaValida = await bcrypt.compare(
-      senha,
-      usuarioValido.rows[0].senha
-    );
+    const senhaCriptografada = usuarioExistente.rows[0].senha;
+
+    const senhaValida = await bcrypt.compare(senha, senhaCriptografada);
 
     if (!senhaValida) {
-      return res.status(404).json({ message: "usuario ou senha invalidos" });
+      return res.status(400).json({ menssagem: "senha ou email invalidos" });
     }
 
-    const criarToken = jwt.sign(
-      { id: usuarioValido.rows[0].id },
-      senhaDoServidor,
-      { expiresIn: "5h" }
-    );
+    const idUsuario = usuarioExistente.rows[0].id;
+
+    const criarToken = jwt.sign({ id: idUsuario }, senhaDoServidor, {
+      expiresIn: "5h",
+    });
+
+    req.usuario = { id: idUsuario };
 
     return res
-      .status(201)
-      .json({ message: "usuario logado", token: criarToken });
-  } catch (error) {}
+      .status(200)
+      .json({ menssagem: "logado", email, token: criarToken });
+  } catch (error) {
+    return res.status(500).json({ menssagem: error });
+  }
 };
 
 module.exports = { cadastrarUsuario, fazerLogin };

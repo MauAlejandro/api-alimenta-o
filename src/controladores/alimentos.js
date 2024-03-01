@@ -22,13 +22,12 @@ const cadastrarAlimento = async (req, res) => {
     proteinas,
     carboidratos,
     gorduras,
-    gorduras_saturadas,
   } = req.body;
 
   try {
     const cadastrar = await pool.query(
-      `insert into alimentos (nome, porcao, calorias, proteinas, carboidratos, gorduras, gorduras_saturadas) 
-    values ($1,$2,$3,$4,$5,$6,$7) returning *`,
+      `insert into alimentos (nome, porcao, calorias, proteinas, carboidratos, gorduras) 
+    values ($1,$2,$3,$4,$5,$6) returning *`,
       [
         nome,
         porcao,
@@ -36,7 +35,6 @@ const cadastrarAlimento = async (req, res) => {
         proteinas,
         carboidratos,
         gorduras,
-        gorduras_saturadas,
       ]
     );
 
@@ -55,7 +53,6 @@ const atualizarAlimento = async (req, res) => {
     proteinas,
     carboidratos,
     gorduras,
-    gorduras_saturadas,
   } = req.body;
 
   if (!nome) {
@@ -73,7 +70,7 @@ const atualizarAlimento = async (req, res) => {
 
   try {
     const atualizar = await pool.query(
-      "update alimentos set nome = $1, porcao = $2, calorias = $3, proteinas = $4, carboidratos = $5, gorduras = $6, gorduras_saturadas = $7 where nome ilike $1 returning *",
+      "update alimentos set nome = $1, porcao = $2, calorias = $3, proteinas = $4, carboidratos = $5, gorduras = $6 where nome ilike $1 returning *",
       [
         nome,
         porcao,
@@ -81,7 +78,6 @@ const atualizarAlimento = async (req, res) => {
         proteinas,
         carboidratos,
         gorduras,
-        gorduras_saturadas,
       ]
     );
 

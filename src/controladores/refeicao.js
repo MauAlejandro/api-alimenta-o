@@ -10,13 +10,16 @@ const infoNutricionalRefeicao = async (req, res) => {
       [id]
     );
 
+    if(exibirInfoNutricional.rowCount < 1){
+      return res.status(404).json({message: "Não há refeicoes cadastradas com o id informado"})
+    };
+
     const {
       nome_refeicao,
       calorias,
       proteinas,
       carboidratos,
       gorduras,
-      gorduras_saturadas,
     } = exibirInfoNutricional.rows[0];
 
     return res.json({
@@ -25,16 +28,16 @@ const infoNutricionalRefeicao = async (req, res) => {
       proteinas,
       carboidratos,
       gorduras,
-      gorduras_saturadas,
     });
   } catch (error) {
-    return res.status(500).json({ message: error });
+    console.log(error);
+    return res.status(500).json({ message: error.message });
   }
 };
 
 const cadastrarRefeicao = async (req, res) => {
   const { nome_refeicao, ingredientes } = req.body;
-  const { id } = req.usuario.rows[0];
+  const { id } = req.usuario;
 
   try {
     const valoresNutricionais = {
@@ -42,7 +45,6 @@ const cadastrarRefeicao = async (req, res) => {
       proteinas: 0,
       carboidratos: 0,
       gorduras: 0,
-      gorduras_saturadas: 0,
     };
 
     for (let ingrediente of ingredientes) {
@@ -51,7 +53,7 @@ const cadastrarRefeicao = async (req, res) => {
       const multiplicarValoresNutricionais = await pool.query(
         `
                 select calorias * $1 as calorias, proteinas * $1 as proteinas, carboidratos * $1 as carboidratos,
-                gorduras * $1 as gorduras, gorduras_saturadas * $1 as gorduras_saturadas 
+                gorduras * $1 as gorduras 
                 from alimentos where nome = $2;`,
         [quantidade, nome_alimento]
       );
@@ -67,27 +69,24 @@ const cadastrarRefeicao = async (req, res) => {
       valoresNutricionais.gorduras += Math.round(
         Number(multiplicarValoresNutricionais.rows[0].gorduras)
       );
-      valoresNutricionais.gorduras_saturadas += Math.round(
-        Number(multiplicarValoresNutricionais.rows[0].gorduras_saturadas)
-      );
     }
 
     const cadastrarRefeicao = await pool.query(
       `
     insert into refeicoes 
-    (nome_refeicao, calorias, proteinas, carboidratos, gorduras, gorduras_saturadas, usuario_id)
-    values ($1, $2, $3, $4, $5, $6, $7) returning id`,
+    (nome_refeicao, calorias, proteinas, carboidratos, gorduras, usuario_id)
+    values ($1, $2, $3, $4, $5, $6) returning id`,
       [
         nome_refeicao,
         valoresNutricionais.calorias,
         valoresNutricionais.proteinas,
         valoresNutricionais.carboidratos,
         valoresNutricionais.gorduras,
-        valoresNutricionais.gorduras_saturadas,
         id,
       ]
     );
 
+    const idRefeicao = cadastrarRefeicao.rows[0].id
     for (let ingrediente of ingredientes) {
       const cadastrar = await pool.query(
         `
@@ -101,7 +100,7 @@ const cadastrarRefeicao = async (req, res) => {
       );
     }
 
-    return res.status(200).json(`refeicao (${nome_refeicao}) cadastrada`);
+    return res.status(200).json(`refeicao (${nome_refeicao}) cadastrada com id ${idRefeicao} `);
   } catch (error) {
     console.log(error);
     return res.status(500).json({ error: error.message });
