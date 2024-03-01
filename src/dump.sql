@@ -30,6 +30,12 @@ insert into alimentos
 values 
 ('banana', 0.98, 0.013, 0.26, 0, 0);
 
+create table usuarios (
+	id serial primary key,
+  nome text not null,
+  email text unique not null,
+  senha text not null
+);
 
 create table refeicoes (
   id serial primary key not null,
@@ -42,16 +48,10 @@ create table refeicoes (
   usuario_id integer references usuarios(id) not null
 );
 
-
 create table ingredientes (
 	refeicao_id integer references refeicoes(id) not null,
   nome_alimento text references alimentos(nome) not null,
   quantidade integer not null
 );
 
-create table usuarios (
-	id serial primary key,
-  nome text not null,
-  email text unique not null,
-  senha text not null
-);
+
