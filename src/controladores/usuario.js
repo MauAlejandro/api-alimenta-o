@@ -62,4 +62,14 @@ const fazerLogin = async (req, res) => {
   }
 };
 
+const cadastrarDieta = (req, res) => {
+  const {dias} = req.body
+  
+  try {
+    
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ menssagem: error });
+  }}
+
 module.exports = { cadastrarUsuario, fazerLogin };

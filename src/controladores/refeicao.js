@@ -10,17 +10,14 @@ const infoNutricionalRefeicao = async (req, res) => {
       [id]
     );
 
-    if(exibirInfoNutricional.rowCount < 1){
-      return res.status(404).json({message: "Não há refeicoes cadastradas com o id informado"})
-    };
+    if (exibirInfoNutricional.rowCount < 1) {
+      return res
+        .status(404)
+        .json({ message: "Não há refeicoes cadastradas com o id informado" });
+    }
 
-    const {
-      nome_refeicao,
-      calorias,
-      proteinas,
-      carboidratos,
-      gorduras,
-    } = exibirInfoNutricional.rows[0];
+    const { nome_refeicao, calorias, proteinas, carboidratos, gorduras } =
+      exibirInfoNutricional.rows[0];
 
     return res.json({
       nome_refeicao,
@@ -86,7 +83,7 @@ const cadastrarRefeicao = async (req, res) => {
       ]
     );
 
-    const idRefeicao = cadastrarRefeicao.rows[0].id
+    const idRefeicao = cadastrarRefeicao.rows[0].id;
     for (let ingrediente of ingredientes) {
       const cadastrar = await pool.query(
         `
@@ -100,11 +97,36 @@ const cadastrarRefeicao = async (req, res) => {
       );
     }
 
-    return res.status(200).json(`refeicao (${nome_refeicao}) cadastrada com id ${idRefeicao} `);
+    return res
+      .status(200)
+      .json(`refeicao (${nome_refeicao}) cadastrada com id ${idRefeicao} `);
   } catch (error) {
     console.log(error);
     return res.status(500).json({ error: error.message });
   }
 };
 
-module.exports = { cadastrarRefeicao, infoNutricionalRefeicao };
+const cadastrarRefeicaoDoDia = async (req, res) => {
+  const { dia_da_refeicao } = req.query;
+  const usuarioId = req.usuario.id;
+  const { refeicaoId } = req.params;
+  console.log(usuarioId)
+
+  try {
+    await pool.query(
+      `insert into refeicoes_do_dia (usuario_id, refeicao_id, dia_da_refeicao) values ($1, $2, $3) returning *`,
+      [usuarioId, refeicaoId, dia_da_refeicao]
+    );
+
+    return res.status(201).json()
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ error: error.message });
+  }
+};
+
+module.exports = {
+  cadastrarRefeicao,
+  infoNutricionalRefeicao,
+  cadastrarRefeicaoDoDia,
+};

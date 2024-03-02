@@ -54,4 +54,9 @@ create table ingredientes (
   quantidade integer not null
 );
 
-
+create table refeicoes_do_dia(
+	id serial primary key,
+  usuario_id integer references usuarios(id) not null,
+  refeicao_id integer references refeicoes(id) not null,
+  dia_da_refeicao text not null
+);
