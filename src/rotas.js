@@ -11,6 +11,7 @@ const {
   cadastrarRefeicao,
   infoNutricionalRefeicao,
   cadastrarRefeicaoDoDia,
+  exibirRefeicoesDoDia,
 } = require("./controladores/refeicao");
 
 const { cadastrarUsuario, fazerLogin } = require("./controladores/usuario");
@@ -35,4 +36,6 @@ rotas.get("/alimentos/:nome", pesquisarAlimento);
 rotas.get("/refeicao/:id", infoNutricionalRefeicao);
 rotas.post("/refeicao", ingredienteCadastrado, cadastrarRefeicao);
 rotas.post("/refeicao/:refeicaoId", refeicaoCadastrada, cadastrarRefeicaoDoDia)
+rotas.get("/refeicao", exibirRefeicoesDoDia)
 module.exports = rotas;
+

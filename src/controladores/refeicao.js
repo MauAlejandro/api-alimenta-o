@@ -110,7 +110,7 @@ const cadastrarRefeicaoDoDia = async (req, res) => {
   const { dia_da_refeicao } = req.query;
   const usuarioId = req.usuario.id;
   const { refeicaoId } = req.params;
-  console.log(usuarioId)
+  console.log(usuarioId);
 
   try {
     await pool.query(
@@ -118,7 +118,44 @@ const cadastrarRefeicaoDoDia = async (req, res) => {
       [usuarioId, refeicaoId, dia_da_refeicao]
     );
 
-    return res.status(201).json()
+    return res.status(201).json();
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ error: error.message });
+  }
+};
+
+const exibirRefeicoesDoDia = async (req, res) => {
+  const { dia_da_refeicao } = req.query;
+  const usuarioId = req.usuario.id;
+
+  try {
+    if (dia_da_refeicao) {
+      let resultado = [];
+
+      for (let dia of dia_da_refeicao) {
+        const idDasRefeicoes = await pool.query(
+          "select * from refeicoes_do_dia where usuario_id = $! and dia_da_refeicao ilike $2",
+          [usuarioId, dia]
+        );
+
+        const refeicoes = await pool.query(
+          "select * from refeicoes where id = $1",
+          [idDasRefeicoes.rows[0]]
+        );
+
+        if (idDasRefeicoes.rowCount < 1) {
+          resultado = resultado;
+        } else {
+          resultado.push({
+            nome_refeicao: refeicoes.rows[0].nome_refeicao,
+            dia_da_refeicao: idDasRefeicoes.rows[0].dia_da_refeicao
+          });
+        }
+      }
+
+      return res.status(200).json(resultado);
+    }
   } catch (error) {
     console.log(error);
     return res.status(500).json({ error: error.message });
@@ -129,4 +166,5 @@ module.exports = {
   cadastrarRefeicao,
   infoNutricionalRefeicao,
   cadastrarRefeicaoDoDia,
+  exibirRefeicoesDoDia,
 };
