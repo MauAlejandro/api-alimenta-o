@@ -135,7 +135,7 @@ const exibirRefeicoesDoDia = async (req, res) => {
 
       for (let dia of dia_da_refeicao) {
         const idDasRefeicoes = await pool.query(
-          "select * from refeicoes_do_dia where usuario_id = $! and dia_da_refeicao ilike $2",
+          "select * from refeicoes_do_dia where usuario_id = $1 and dia_da_refeicao ilike $2",
           [usuarioId, dia]
         );
 
