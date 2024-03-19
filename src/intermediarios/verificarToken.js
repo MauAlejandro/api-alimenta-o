@@ -7,23 +7,23 @@ const verificarToken = async (req, res, next) => {
   if (!authorization) {
     return res.status(401).json({ message: "Não permitido" });
   }
-  
+
   const token = authorization.split(" ")[1];
-  
+
   try {
     const { id } = jwt.verify(token, senhaDoServidor);
-    
+
     const tokenValido = await pool.query(
       "select * from usuarios where id = $1",
       [id]
-      );
-      
-      if (tokenValido.rowCount < 1) {
-        return res.status(401).json({ message: "Não permitido" });
-      }
-      
-      req.usuario = tokenValido.rows[0];
-      
+    );
+
+    if (tokenValido.rowCount < 1) {
+      return res.status(401).json({ message: "Não permitido" });
+    }
+
+    req.usuario = tokenValido.rows[0];
+
     next();
   } catch (error) {
     console.log(error);
@@ -31,4 +31,4 @@ const verificarToken = async (req, res, next) => {
   }
 };
 
-module.exports = verificarToken
+module.exports = verificarToken;

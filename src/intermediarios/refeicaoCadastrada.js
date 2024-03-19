@@ -11,14 +11,16 @@ const refeicaoCadastrada = async (req, res, next) => {
     );
 
     if (verificar.rowCount < 1) {
-        return res.status(404).json({message: "Não há refeicoes referentes ao id informado"})
+      return res
+        .status(404)
+        .json({ message: "Não há refeicoes referentes ao id informado" });
     }
 
-    next()
+    next();
   } catch (error) {
     console.log(error);
     return res.status(500).json({ error: error.message });
   }
 };
 
-module.exports = refeicaoCadastrada
+module.exports = refeicaoCadastrada;

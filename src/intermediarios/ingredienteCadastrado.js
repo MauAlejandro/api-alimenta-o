@@ -13,7 +13,7 @@ const ingredienteCadastrado = async (req, res, next) => {
 
       if (ingredienteregistrado.rowCount < 1) {
         if (ingredientesNaoCadastrados.length > 0) {
-          const nome_alimento = " " + ingrediente.nome_alimento
+          const nome_alimento = " " + ingrediente.nome_alimento;
           ingredientesNaoCadastrados.push(nome_alimento);
         } else {
           ingredientesNaoCadastrados.push(ingrediente.nome_alimento);
@@ -22,11 +22,9 @@ const ingredienteCadastrado = async (req, res, next) => {
     }
 
     if (ingredientesNaoCadastrados.length > 0) {
-      return res
-        .status(404)
-        .json({
-          message: `ingrediente ${ingredientesNaoCadastrados} não cadastrado`,
-        });
+      return res.status(404).json({
+        message: `ingrediente ${ingredientesNaoCadastrados} não cadastrado`,
+      });
     }
     console.log("passei");
     next();

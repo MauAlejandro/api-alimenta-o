@@ -1,3 +1,3 @@
-const senhaDoServidor = process.env.SERVER_KEY
+const senhaDoServidor = process.env.SERVER_KEY;
 
-module.exports = senhaDoServidor
+module.exports = senhaDoServidor;

@@ -1,6 +1,6 @@
 const pool = require("../conexao");
 
-const emailExistente = async(req, res, next) => {
+const emailExistente = async (req, res, next) => {
   const { email } = req.body;
 
   try {
@@ -10,13 +10,15 @@ const emailExistente = async(req, res, next) => {
     );
 
     if (verificarEmail.rowCount > 0) {
-        return res.status(401).json({message: "já existe usuario com este email"})
+      return res
+        .status(401)
+        .json({ message: "já existe usuario com este email" });
     }
 
-    next()
+    next();
   } catch (error) {
-    return res.status(500).json({message: error})
+    return res.status(500).json({ message: error });
   }
 };
 
-module.exports = emailExistente
+module.exports = emailExistente;

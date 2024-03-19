@@ -20,11 +20,19 @@ const ingredienteCadastrado = require("./intermediarios/ingredienteCadastrado");
 const emailExistente = require("./intermediarios/emailExistente");
 const verificarToken = require("./intermediarios/verificarToken");
 const refeicaoCadastrada = require("./intermediarios/refeicaoCadastrada");
+const validarCorpoReq = require("./intermediarios/validarCorpoReq");
+const schemaUsuario = require("./schemas/schemaUsuarios");
+const schemaLogin = require("./schemas/schemaLogin");
 
 const rotas = express();
 
-rotas.post("/usuario", emailExistente, cadastrarUsuario);
-rotas.get("/login", fazerLogin);
+rotas.post(
+  "/usuario",
+  validarCorpoReq(schemaUsuario),
+  emailExistente,
+  cadastrarUsuario
+);
+rotas.get("/login", validarCorpoReq(schemaLogin), fazerLogin);
 
 rotas.use(verificarToken);
 
@@ -35,7 +43,6 @@ rotas.get("/alimentos/:nome", pesquisarAlimento);
 
 rotas.get("/refeicao/:id", infoNutricionalRefeicao);
 rotas.post("/refeicao", ingredienteCadastrado, cadastrarRefeicao);
-rotas.post("/refeicao/:refeicaoId", refeicaoCadastrada, cadastrarRefeicaoDoDia)
-rotas.get("/refeicao", exibirRefeicoesDoDia)
+rotas.post("/refeicao/:refeicaoId", refeicaoCadastrada, cadastrarRefeicaoDoDia);
+rotas.get("/refeicao", exibirRefeicoesDoDia);
 module.exports = rotas;
-

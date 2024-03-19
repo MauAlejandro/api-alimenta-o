@@ -1,3 +1,3 @@
-const apiKey = process.env.APIKEY
+const apiKey = process.env.APIKEY;
 
-module.exports = apiKey
+module.exports = apiKey;

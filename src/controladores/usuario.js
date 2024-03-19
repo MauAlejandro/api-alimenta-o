@@ -58,18 +58,9 @@ const fazerLogin = async (req, res) => {
       .status(200)
       .json({ menssagem: "logado", email, token: criarToken });
   } catch (error) {
-    return res.status(500).json({ menssagem: error });
+    console.log(error);
+    return res.status(500).json({ menssagem: error.message });
   }
 };
-
-const cadastrarDieta = (req, res) => {
-  const {dias} = req.body
-  
-  try {
-    
-  } catch (error) {
-    console.log(error);
-    return res.status(500).json({ menssagem: error });
-  }}
 
 module.exports = { cadastrarUsuario, fazerLogin };

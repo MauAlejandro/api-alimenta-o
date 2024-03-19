@@ -4,9 +4,7 @@ const pool = require("../conexao");
 
 const exibirAlimentos = async (req, res) => {
   try {
-    const alimentosRegistrados = await pool.query(
-      "select * from alimentos"
-    );
+    const alimentosRegistrados = await pool.query("select * from alimentos");
 
     return res.json(alimentosRegistrados.rows);
   } catch (error) {
@@ -15,27 +13,14 @@ const exibirAlimentos = async (req, res) => {
 };
 
 const cadastrarAlimento = async (req, res) => {
-  const {
-    nome,
-    porcao,
-    calorias,
-    proteinas,
-    carboidratos,
-    gorduras,
-  } = req.body;
+  const { nome, porcao, calorias, proteinas, carboidratos, gorduras } =
+    req.body;
 
   try {
     const cadastrar = await pool.query(
       `insert into alimentos (nome, porcao, calorias, proteinas, carboidratos, gorduras) 
     values ($1,$2,$3,$4,$5,$6) returning *`,
-      [
-        nome,
-        porcao,
-        calorias,
-        proteinas,
-        carboidratos,
-        gorduras,
-      ]
+      [nome, porcao, calorias, proteinas, carboidratos, gorduras]
     );
 
     return res.status(201).json(cadastrar.rows[0]);
@@ -46,14 +31,8 @@ const cadastrarAlimento = async (req, res) => {
 };
 
 const atualizarAlimento = async (req, res) => {
-  const {
-    nome,
-    porcao,
-    calorias,
-    proteinas,
-    carboidratos,
-    gorduras,
-  } = req.body;
+  const { nome, porcao, calorias, proteinas, carboidratos, gorduras } =
+    req.body;
 
   if (!nome) {
     return res.status(400).json({ message: "nome é obrigatorio" });
@@ -71,14 +50,7 @@ const atualizarAlimento = async (req, res) => {
   try {
     const atualizar = await pool.query(
       "update alimentos set nome = $1, porcao = $2, calorias = $3, proteinas = $4, carboidratos = $5, gorduras = $6 where nome ilike $1 returning *",
-      [
-        nome,
-        porcao,
-        calorias,
-        proteinas,
-        carboidratos,
-        gorduras,
-      ]
+      [nome, porcao, calorias, proteinas, carboidratos, gorduras]
     );
 
     return res.status(200).json(atualizar.rows[0]);
