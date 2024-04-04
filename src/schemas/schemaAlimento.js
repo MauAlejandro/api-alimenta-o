@@ -2,7 +2,7 @@ const joi = require("joi");
 
 const schemaAlimentos = joi.object({
   nome: joi.string().required(),
-  porcao: joi.required(),
+  porcao: joi.string(),
   calorias: joi.number().required(),
   proteinas: joi.number().required(),
   carboidratos: joi.number().required,

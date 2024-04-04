@@ -1,6 +1,6 @@
 const jwt = require("jsonwebtoken");
-const senhaDoServidor = require("../jwt_key");
-const pool = require("../conexao");
+const senhaDoServidor = require("../controladores/jwt_key");
+const pool = require("../controladores/conexao");
 
 const verificarToken = async (req, res, next) => {
   const { authorization } = req.headers;
@@ -26,8 +26,8 @@ const verificarToken = async (req, res, next) => {
 
     next();
   } catch (error) {
-    console.log(error);
-    return res.status(500).json({ message: error });
+    console.log(error.message);
+    return res.status(500).json({ message: error.message });
   }
 };
 

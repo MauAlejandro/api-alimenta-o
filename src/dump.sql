@@ -49,6 +49,7 @@ create table refeicoes (
 );
 
 create table ingredientes (
+  id serial primary key,
 	refeicao_id integer references refeicoes(id) not null,
   nome_alimento text references alimentos(nome) not null,
   quantidade integer not null

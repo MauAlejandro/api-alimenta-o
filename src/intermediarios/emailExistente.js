@@ -1,4 +1,4 @@
-const pool = require("../conexao");
+const pool = require("../controladores/conexao");
 
 const emailExistente = async (req, res, next) => {
   const { email } = req.body;

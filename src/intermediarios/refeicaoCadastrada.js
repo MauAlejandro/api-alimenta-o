@@ -1,4 +1,4 @@
-const pool = require("../conexao");
+const pool = require("../controladores/conexao");
 
 const refeicaoCadastrada = async (req, res, next) => {
   const { refeicaoId } = req.params;

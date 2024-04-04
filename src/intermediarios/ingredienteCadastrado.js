@@ -1,4 +1,4 @@
-const pool = require("../conexao");
+const pool = require("../controladores/conexao");
 
 const ingredienteCadastrado = async (req, res, next) => {
   const { ingredientes } = req.body;
